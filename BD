@@ -1,0 +1,78 @@
+CREATE DATABASE agencia_accidente;
+
+CREATE TABLE propietario(
+	id_pro serial primary key,
+	nombre varchar(30),
+	ape_pat varchar(30),
+	ape_mat varchar(30),
+	rfc varchar(13),
+	direc varchar(50),
+	edad integer,
+	sexo varchar(1),
+	CHECK(rfc ~'^[A-Z]{4}[0-9]{6}[A-Z0-9]{3}$'),
+	CHECK(sexo IN ('m', 'f')),
+	CHECK(edad >= 18)
+);
+
+
+CREATE TABLE telefono(
+	id_telefono serial primary key,
+	tipo_telefono varchar(8),
+	no_telefono varchar(10),
+	id_pro integer,
+	CHECK(tipo_telefono IN ('celular', 'casa', 'oficina','Ninguno')),
+	FOREIGN KEY (id_pro) references propietario (id_pro)
+);
+
+
+
+CREATE TABLE autos(
+	placa varchar(10) primary key,
+	id_pro integer,
+	modelo integer,
+	color varchar(30),
+	marca varchar(30),
+	FOREIGN KEY (id_pro) references propietario (id_pro),
+	CHECK(modelo >= 2015)
+);
+CREATE TABLE accidente(
+	num_acc integer, --consec
+	placa varchar(10),
+	fecha date,
+	lugar varchar(30),
+	hora TIME,
+	FOREIGN KEY (placa) references autos (placa),
+	primary key (num_acc,placa),	
+	CHECK(fecha <= now())	
+);
+
+
+--SELECCIONAR PROPIETARIO CON SU NUMERO DE TELEFONO
+
+SELECT propi.nombre, propi.ape_pat, propi.ape_mat, propi.rfc, propi.direc, propi.edad,propi.sexo, tel.tipo_telefono,tel.no_telefono
+FROM propietario propi
+INNER JOIN telefono tel 
+    ON tel.id_pro = propi.id_pro;
+    
+    
+DELETE FROM propietario propi
+LEFT JOIN telefono tel ON propi.id_pro = tel.id_pro 
+WHERE propi.nombre = '';
+
+
+pedidos
+
+UPDATE telefono SET tipo_telefono = '' FROM propietario WHERE telefono.id_pro = propietario.id_pro AND propietario.id_pro = 
+
+
+
+
+
+
+
+
+
+
+
+
+
